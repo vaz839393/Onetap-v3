@@ -6,16 +6,43 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = join(__dirname, "..", "..", "data");
 const CONFIG_PATH = join(DATA_DIR, "config.json");
 
-// Tokens live in DISCORD_TOKEN / DISCORD_TOKEN_2 env vars (Replit Secrets / Render env vars).
-// They are never written to disk. Runtime overrides last only for the current process.
+// Runtime-only token overrides (in-memory, fastest path)
 let runtimeToken1: string | null = null;
 let runtimeToken2: string | null = null;
+
+function ensureDataDir() {
+  if (!existsSync(DATA_DIR)) mkdirSync(DATA_DIR, { recursive: true });
+}
+
+// ── Token cache (persisted to disk so server restarts don't lose the token) ──
+function loadTokenCache(): { t1?: string; t2?: string } {
+  try {
+    if (!existsSync(CONFIG_PATH)) return {};
+    const raw = readFileSync(CONFIG_PATH, "utf-8");
+    const p = JSON.parse(raw) as any;
+    return { t1: p._t1 || undefined, t2: p._t2 || undefined };
+  } catch { return {}; }
+}
+
+function saveTokenCache(field: "_t1" | "_t2", token: string) {
+  ensureDataDir();
+  let raw: any = {};
+  try { if (existsSync(CONFIG_PATH)) raw = JSON.parse(readFileSync(CONFIG_PATH, "utf-8")); } catch { /**/ }
+  raw[field] = token;
+  writeFileSync(CONFIG_PATH, JSON.stringify(raw, null, 2));
+}
+
+// Pre-load cached tokens on module init so reconnects work after server restart
+const _cache = loadTokenCache();
+if (_cache.t1) runtimeToken1 = _cache.t1;
+if (_cache.t2) runtimeToken2 = _cache.t2;
 
 export function getDiscordToken(): string {
   return runtimeToken1 ?? process.env["DISCORD_TOKEN"] ?? "";
 }
 export function setRuntimeToken(token: string): void {
   runtimeToken1 = token.trim() || null;
+  if (runtimeToken1) saveTokenCache("_t1", runtimeToken1);
 }
 
 export function getDiscordToken2(): string {
@@ -23,6 +50,7 @@ export function getDiscordToken2(): string {
 }
 export function setRuntimeToken2(token: string): void {
   runtimeToken2 = token.trim() || null;
+  if (runtimeToken2) saveTokenCache("_t2", runtimeToken2);
 }
 
 export interface Config {
@@ -39,10 +67,6 @@ const DEFAULT_CONFIG: Config = {
   clipboardMessenger2: { enabled: false, channelId: "" },
 };
 
-function ensureDataDir() {
-  if (!existsSync(DATA_DIR)) mkdirSync(DATA_DIR, { recursive: true });
-}
-
 export function loadConfig(): Config {
   ensureDataDir();
   if (!existsSync(CONFIG_PATH)) {
@@ -53,31 +77,20 @@ export function loadConfig(): Config {
     const raw = readFileSync(CONFIG_PATH, "utf-8");
     const p = JSON.parse(raw) as Partial<Config>;
     return {
-      autoReact: {
-        enabled: p.autoReact?.enabled ?? DEFAULT_CONFIG.autoReact.enabled,
-        emoji: p.autoReact?.emoji ?? DEFAULT_CONFIG.autoReact.emoji,
-      },
-      autoReact2: {
-        enabled: p.autoReact2?.enabled ?? DEFAULT_CONFIG.autoReact2.enabled,
-        emoji: p.autoReact2?.emoji ?? DEFAULT_CONFIG.autoReact2.emoji,
-      },
-      clipboardMessenger: {
-        enabled: p.clipboardMessenger?.enabled ?? DEFAULT_CONFIG.clipboardMessenger.enabled,
-        channelId: p.clipboardMessenger?.channelId ?? DEFAULT_CONFIG.clipboardMessenger.channelId,
-      },
-      clipboardMessenger2: {
-        enabled: p.clipboardMessenger2?.enabled ?? DEFAULT_CONFIG.clipboardMessenger2.enabled,
-        channelId: p.clipboardMessenger2?.channelId ?? DEFAULT_CONFIG.clipboardMessenger2.channelId,
-      },
+      autoReact: { enabled: p.autoReact?.enabled ?? false, emoji: p.autoReact?.emoji ?? "👍" },
+      autoReact2: { enabled: p.autoReact2?.enabled ?? false, emoji: p.autoReact2?.emoji ?? "👍" },
+      clipboardMessenger: { enabled: p.clipboardMessenger?.enabled ?? false, channelId: p.clipboardMessenger?.channelId ?? "" },
+      clipboardMessenger2: { enabled: p.clipboardMessenger2?.enabled ?? false, channelId: p.clipboardMessenger2?.channelId ?? "" },
     };
-  } catch {
-    return { ...DEFAULT_CONFIG };
-  }
+  } catch { return { ...DEFAULT_CONFIG }; }
 }
 
 export function saveConfig(config: Config): void {
   ensureDataDir();
-  writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2));
+  // Merge with existing file to preserve _t1/_t2 cache fields
+  let existing: any = {};
+  try { if (existsSync(CONFIG_PATH)) existing = JSON.parse(readFileSync(CONFIG_PATH, "utf-8")); } catch { /**/ }
+  writeFileSync(CONFIG_PATH, JSON.stringify({ ...existing, ...config }, null, 2));
 }
 
 export function updateConfig(partial: Partial<Config>): Config {

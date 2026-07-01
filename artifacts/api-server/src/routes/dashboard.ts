@@ -43,10 +43,25 @@ router.post("/send-message", async (req, res) => {
 });
 
 router.post("/auto-send/start", (req, res) => {
-  const { message, channelId, intervalMs } = req.body as { message?: string; channelId?: string; intervalMs?: number };
-  if (!message || !channelId) { res.status(400).json({ success: false, error: "Missing message or channelId" }); return; }
-  const result = startAutoSend(message, channelId, intervalMs ?? 300);
-  res.status(result.success ? 200 : 400).json(result.success ? { success: true, autoSend: getAutoSendStatus() } : { success: false, error: result.error });
+  const { message, messages, channelId, intervalMs, bypass } = req.body as {
+    message?: string;
+    messages?: string[];
+    channelId?: string;
+    intervalMs?: number;
+    bypass?: boolean;
+  };
+  // Accept either messages[] (new) or single message (legacy)
+  const msgArray = Array.isArray(messages) && messages.length > 0
+    ? messages
+    : message ? [message] : [];
+  if (msgArray.length === 0 || !channelId) {
+    res.status(400).json({ success: false, error: "Missing messages or channelId" });
+    return;
+  }
+  const result = startAutoSend(msgArray, channelId, intervalMs ?? 300, bypass ?? false);
+  res.status(result.success ? 200 : 400).json(
+    result.success ? { success: true, autoSend: getAutoSendStatus() } : { success: false, error: result.error }
+  );
 });
 
 router.post("/auto-send/stop", (_req, res) => {
@@ -70,7 +85,7 @@ router.post("/change-token", (req, res) => {
 });
 
 router.post("/restart-bot", (_req, res) => {
-  if (!getDiscordToken()) { res.status(400).json({ success: false, error: "No token configured — set DISCORD_TOKEN secret first" }); return; }
+  if (!getDiscordToken()) { res.status(400).json({ success: false, error: "No token configured — use Change Token button" }); return; }
   restartBot().catch((e) => console.error("bot1 restartBot error:", e));
   res.json({ success: true, message: "Bot restart initiated…" });
 });

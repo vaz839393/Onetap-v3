@@ -9,39 +9,25 @@
   <title>Discord Selfbot Dashboard</title>
   <style>
     :root {
-      --bg: #1e1f22;
-      --bg2: #2b2d31;
-      --card: #313338;
-      --input: #1e1f22;
-      --blue: #5865f2;
-      --blue-h: #4752c4;
-      --purple: #9b84ec;
-      --purple-h: #7b63d0;
-      --red: #ed4245;
-      --red-h: #c03537;
-      --green: #57f287;
-      --online: #23a55a;
-      --offline: #80848e;
-      --warn: #f0b232;
-      --text: #f2f3f5;
-      --sub: #b5bac1;
-      --muted: #80848e;
-      --border: #3f4147;
-      --r: 8px;
-      --font: -apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+      --bg: #1e1f22; --bg2: #2b2d31; --card: #313338; --input: #1e1f22;
+      --blue: #5865f2; --blue-h: #4752c4;
+      --purple: #9b84ec; --purple-h: #7b63d0;
+      --red: #ed4245; --red-h: #c03537;
+      --green: #57f287; --online: #23a55a;
+      --offline: #80848e; --warn: #f0b232;
+      --text: #f2f3f5; --sub: #b5bac1; --muted: #80848e; --border: #3f4147;
+      --r: 8px; --font: -apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
 
-    /* header */
     header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 14px 20px; display: flex; align-items: center; gap: 10px; }
     .logo { width: 34px; height: 34px; background: var(--blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
     header h1 { font-size: 17px; font-weight: 700; }
     header .ver { font-size: 12px; color: var(--muted); margin-left: auto; }
 
-    /* tabs */
     .tabs { display: flex; background: var(--bg2); border-bottom: 1px solid var(--border); }
-    .tab { flex: 1; padding: 12px 0; text-align: center; font-size: 14px; font-weight: 600; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: color .15s, border-color .15s; user-select: none; position: relative; }
+    .tab { flex: 1; padding: 12px 0; text-align: center; font-size: 14px; font-weight: 600; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: color .15s, border-color .15s; user-select: none; }
     .tab.active.acc1 { color: var(--blue); border-color: var(--blue); }
     .tab.active.acc2 { color: var(--purple); border-color: var(--purple); }
     .tab .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--offline); margin-right: 6px; vertical-align: middle; }
@@ -49,11 +35,9 @@
     .tab .dot.connecting { background: var(--warn); animation: pulse 1s infinite; }
     .tab .dot.error { background: var(--red); }
 
-    /* panels */
-    .panel { display: none; padding: 20px 16px; max-width: 700px; margin: 0 auto; width: 100%; }
+    .panel { display: none; padding: 20px 16px; max-width: 680px; margin: 0 auto; width: 100%; }
     .panel.active { display: block; }
 
-    /* status bar */
     .status-bar { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); padding: 12px 14px; display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
     .sdot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; background: var(--offline); }
     .sdot.online { background: var(--online); box-shadow: 0 0 6px var(--online); }
@@ -67,7 +51,6 @@
     .btn-sm:hover { background: var(--border); color: var(--text); }
     .btn-sm:disabled { opacity: .5; cursor: not-allowed; }
 
-    /* cards */
     .card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); padding: 18px; margin-bottom: 14px; }
     .card.acc2 { border-color: #9b84ec22; }
     .ch { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
@@ -82,7 +65,7 @@
     .field label { display: block; font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 5px; }
     .field input, .field textarea { width: 100%; padding: 9px 11px; background: var(--input); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: var(--font); font-size: 14px; outline: none; transition: border-color .15s; }
     .field input:focus, .field textarea:focus { border-color: var(--blue); }
-    .field textarea { resize: vertical; min-height: 70px; }
+    .field textarea { resize: vertical; min-height: 62px; }
     .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 16px; font-size: 14px; font-weight: 600; border-radius: 6px; border: none; cursor: pointer; font-family: var(--font); transition: background .15s, opacity .15s; }
     .btn:disabled { opacity: .5; cursor: not-allowed; }
     .btn-blue { background: var(--blue); color: white; }
@@ -97,6 +80,20 @@
     .row { display: flex; gap: 8px; }
     .row .btn { flex: 1; }
     hr { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+
+    /* Bypass badge */
+    .bypass-row { display: flex; align-items: center; justify-content: space-between; background: #1a1b1e; border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; margin-bottom: 12px; }
+    .bypass-row .bl { font-size: 13px; font-weight: 600; }
+    .bypass-row .bs { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    /* Msg cycle labels */
+    .msg-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }
+    .msg-num { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: var(--blue); color: white; font-size: 10px; font-weight: 700; }
+    .msg-num.p { background: var(--purple); }
+    .msg-opt { font-size: 10px; color: var(--muted); margin-left: auto; }
+
+    /* Send stats */
+    .stats-bar { display: none; background: #1a1b1e; border-radius: 6px; padding: 8px 12px; font-size: 12px; color: var(--muted); margin-top: 8px; }
 
     /* toast */
     .toast-wrap { position: fixed; bottom: 20px; right: 16px; display: flex; flex-direction: column; gap: 7px; z-index: 99; }
@@ -118,7 +115,7 @@
   <header>
     <div class="logo">🤖</div>
     <h1>Discord Selfbot Dashboard</h1>
-    <span class="ver">v3.0</span>
+    <span class="ver">v3.1</span>
   </header>
 
   <div class="tabs">
@@ -130,7 +127,7 @@
     </div>
   </div>
 
-  <!-- ACCOUNT 1 PANEL -->
+  <!-- ── ACCOUNT 1 ── -->
   <div class="panel active" id="panel1">
     <div class="status-bar">
       <div class="sdot" id="a1-statusDot"></div>
@@ -160,27 +157,64 @@
         <button class="toggle" id="a1-clipboardToggle" onclick="toggleClipboard(1)"></button>
       </div>
       <div class="cd">
-        <p>Spam a message to a Discord channel.</p>
+        <p>Cycles through up to 3 messages automatically. Leave Message 2 &amp; 3 empty to send only Message 1.</p>
+
         <div class="field"><label>Channel / Group ID</label><input type="text" id="a1-channelIdInput" placeholder="123456789012345678" /></div>
-        <button class="btn btn-blue btn-full" style="margin-bottom:10px" onclick="saveChannelId(1)">Save Channel ID</button>
+        <button class="btn btn-blue btn-full" style="margin-bottom:12px" onclick="saveChannelId(1)">Save Channel ID</button>
+
         <hr />
-        <div class="field"><label>Message</label><textarea id="a1-messageInput" placeholder="Type your message…"></textarea></div>
+
+        <!-- Message 1 -->
+        <div class="field">
+          <div class="msg-label"><span class="msg-num">1</span> Message 1</div>
+          <textarea id="a1-msg1" placeholder="Required — first message to send…"></textarea>
+        </div>
+        <!-- Message 2 -->
+        <div class="field">
+          <div class="msg-label"><span class="msg-num">2</span> Message 2 <span class="msg-opt">optional</span></div>
+          <textarea id="a1-msg2" placeholder="Sent after Message 1…"></textarea>
+        </div>
+        <!-- Message 3 -->
+        <div class="field">
+          <div class="msg-label"><span class="msg-num">3</span> Message 3 <span class="msg-opt">optional</span></div>
+          <textarea id="a1-msg3" placeholder="Sent after Message 2, then loops back…"></textarea>
+        </div>
+
+        <hr />
+
+        <!-- Spam bypass -->
+        <div class="bypass-row">
+          <div>
+            <div class="bl">🛡️ Spam Bypass</div>
+            <div class="bs">Adds random timing jitter ±25% + invisible chars to avoid detection</div>
+          </div>
+          <button class="toggle" id="a1-bypassToggle" onclick="toggleBypass(1)"></button>
+        </div>
+
+        <!-- Interval -->
         <div class="field">
           <label>Interval: <span id="a1-delayLabel">300ms</span></label>
-          <input type="range" id="a1-delaySlider" min="50" max="2000" step="50" value="300" oninput="updateDelayLabel(1,this.value)" style="width:100%;accent-color:var(--blue);cursor:pointer;margin-top:4px;" />
-          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:2px;"><span>50ms</span><span>2s</span></div>
+          <input type="range" id="a1-delaySlider" min="100" max="4000" step="100" value="300"
+            oninput="updateDelayLabel(1,this.value)"
+            style="width:100%;accent-color:var(--blue);cursor:pointer;margin-top:4px;" />
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:2px;"><span>100ms</span><span>4s</span></div>
         </div>
+
         <div class="row">
           <button class="btn btn-blue" onclick="sendOnce(1)" id="a1-sendOnceBtn">Send Once</button>
           <button class="btn btn-green" onclick="startAutoSend(1)" id="a1-startBtn">▶ Start</button>
           <button class="btn btn-red" style="display:none" onclick="stopAutoSend(1)" id="a1-stopBtn">■ Stop</button>
         </div>
-        <div id="a1-sendStats" style="font-size:12px;color:var(--muted);margin-top:8px;display:none;">Sent: <span id="a1-sendCount">0</span></div>
+        <div class="stats-bar" id="a1-sendStats">
+          Sent: <strong id="a1-sendCount">0</strong>
+          &nbsp;·&nbsp; Current msg: <strong id="a1-curMsg">1</strong>
+          &nbsp;·&nbsp; <span id="a1-bypassStatus"></span>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- ACCOUNT 2 PANEL -->
+  <!-- ── ACCOUNT 2 ── -->
   <div class="panel" id="panel2">
     <div class="status-bar" style="border-color:#9b84ec33;">
       <div class="sdot" id="a2-statusDot"></div>
@@ -212,20 +246,41 @@
       <div class="cd">
         <p>Spam a message to a Discord channel.</p>
         <div class="field"><label>Channel / Group ID</label><input type="text" id="a2-channelIdInput" placeholder="123456789012345678" /></div>
-        <button class="btn btn-purple btn-full" style="margin-bottom:10px" onclick="saveChannelId(2)">Save Channel ID</button>
+        <button class="btn btn-purple btn-full" style="margin-bottom:12px" onclick="saveChannelId(2)">Save Channel ID</button>
         <hr />
-        <div class="field"><label>Message</label><textarea id="a2-messageInput" placeholder="Type your message…"></textarea></div>
+        <div class="field">
+          <div class="msg-label"><span class="msg-num p">1</span> Message</div>
+          <textarea id="a2-msg1" placeholder="Type your message…"></textarea>
+        </div>
+
+        <hr />
+
+        <!-- Spam bypass for acc2 -->
+        <div class="bypass-row">
+          <div>
+            <div class="bl">🛡️ Spam Bypass</div>
+            <div class="bs">Adds random timing jitter ±25% + invisible chars to avoid detection</div>
+          </div>
+          <button class="toggle p" id="a2-bypassToggle" onclick="toggleBypass(2)"></button>
+        </div>
+
         <div class="field">
           <label>Interval: <span id="a2-delayLabel">300ms</span></label>
-          <input type="range" id="a2-delaySlider" min="50" max="2000" step="50" value="300" oninput="updateDelayLabel(2,this.value)" style="width:100%;accent-color:var(--purple);cursor:pointer;margin-top:4px;" />
-          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:2px;"><span>50ms</span><span>2s</span></div>
+          <input type="range" id="a2-delaySlider" min="100" max="4000" step="100" value="300"
+            oninput="updateDelayLabel(2,this.value)"
+            style="width:100%;accent-color:var(--purple);cursor:pointer;margin-top:4px;" />
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:2px;"><span>100ms</span><span>4s</span></div>
         </div>
+
         <div class="row">
           <button class="btn btn-purple" onclick="sendOnce(2)" id="a2-sendOnceBtn">Send Once</button>
           <button class="btn btn-green" onclick="startAutoSend(2)" id="a2-startBtn">▶ Start</button>
           <button class="btn btn-red" style="display:none" onclick="stopAutoSend(2)" id="a2-stopBtn">■ Stop</button>
         </div>
-        <div id="a2-sendStats" style="font-size:12px;color:var(--muted);margin-top:8px;display:none;">Sent: <span id="a2-sendCount">0</span></div>
+        <div class="stats-bar" id="a2-sendStats">
+          Sent: <strong id="a2-sendCount">0</strong>
+          &nbsp;·&nbsp; <span id="a2-bypassStatus"></span>
+        </div>
       </div>
     </div>
   </div>
@@ -234,7 +289,7 @@
   <div class="modal-overlay" id="tokenModal">
     <div class="modal">
       <h2 id="tokenModalTitle">🔑 Change Token</h2>
-      <p id="tokenModalDesc">Paste the Discord user token. The bot reconnects immediately.</p>
+      <p id="tokenModalDesc">Paste your Discord user token. The bot reconnects immediately and the token is saved for future restarts.</p>
       <div class="field"><label>Discord Token</label><input type="password" id="tokenInput" placeholder="Paste token here…" /></div>
       <div class="modal-actions">
         <button class="btn" style="background:var(--card);color:var(--sub)" onclick="closeTokenModal()">Cancel</button>
@@ -249,13 +304,13 @@
     const APIS = { 1: '/api/dashboard', 2: '/api/dashboard2' };
 
     const state = {
-      1: { autoReact:{enabled:false,emoji:'👍'}, clipboardMessenger:{enabled:false,channelId:''}, bot:{status:'offline',username:null,error:null}, autoSend:{active:false,count:0,message:'',channelId:'',intervalMs:300} },
-      2: { autoReact:{enabled:false,emoji:'👍'}, clipboardMessenger:{enabled:false,channelId:''}, bot:{status:'offline',username:null,error:null}, autoSend:{active:false,count:0,message:'',channelId:'',intervalMs:300} },
+      1: { autoReact:{enabled:false,emoji:'👍'}, clipboardMessenger:{enabled:false,channelId:''}, bot:{status:'offline',username:null,error:null}, autoSend:{active:false,count:0,messages:[],channelId:'',intervalMs:300,bypass:false}, bypass:false },
+      2: { autoReact:{enabled:false,emoji:'👍'}, clipboardMessenger:{enabled:false,channelId:''}, bot:{status:'offline',username:null,error:null}, autoSend:{active:false,count:0,messages:[],channelId:'',intervalMs:300,bypass:false}, bypass:false },
     };
 
     let activeTokenAccount = 1;
-    let pollTimers = {1:null, 2:null};
-    let pollIntervals = {1:5000, 2:5000};
+    let pollTimers = {1:null,2:null};
+    let pollIntervals = {1:5000,2:5000};
 
     function p(acc, id) { return document.getElementById('a'+acc+'-'+id); }
 
@@ -298,8 +353,7 @@
     function renderStatus(acc) {
       const s = state[acc].bot.status;
       p(acc,'statusDot').className='sdot '+s;
-      const tabDot = document.getElementById('t'+acc+'-dot');
-      tabDot.className='dot '+s;
+      document.getElementById('t'+acc+'-dot').className='dot '+s;
       const labels={online:'Online',offline:'Offline',connecting:'Connecting…',error:'Connection Failed'};
       p(acc,'statusLabel').textContent=labels[s]||s;
       const sub=p(acc,'statusSub');
@@ -308,7 +362,7 @@
         const msg=state[acc].bot.error||'';
         sub.textContent=msg.toLowerCase().includes('token')?'Invalid token — tap 🔑 Token to fix':msg;
       } else if(s==='connecting') sub.textContent='Authenticating with Discord…';
-      else sub.textContent=acc===2?'Tap 🔑 Token to activate Account 2':'Bot is offline';
+      else sub.textContent=acc===2?'Tap 🔑 Token to activate':'Bot is offline';
       p(acc,'restartBtn').disabled=s==='connecting';
     }
 
@@ -326,18 +380,39 @@
     }
 
     function renderAutoSendUI(acc) {
-      const active=state[acc].autoSend?.active;
+      const as=state[acc].autoSend;
+      const active=as?.active;
       p(acc,'startBtn').style.display=active?'none':'';
       p(acc,'stopBtn').style.display=active?'':'none';
       p(acc,'sendOnceBtn').disabled=!!active;
       p(acc,'sendStats').style.display=active?'block':'none';
       if(active) {
-        p(acc,'sendCount').textContent=state[acc].autoSend.count;
-        const msg=p(acc,'messageInput'); if(!msg.value&&state[acc].autoSend.message) msg.value=state[acc].autoSend.message;
-        const cid=p(acc,'channelIdInput'); if(!cid.value&&state[acc].autoSend.channelId) cid.value=state[acc].autoSend.channelId;
-        const sl=p(acc,'delaySlider'); sl.value=state[acc].autoSend.intervalMs;
-        updateDelayLabel(acc,state[acc].autoSend.intervalMs);
+        p(acc,'sendCount').textContent=as.count;
+        // Restore messages if textarea is empty
+        const msgs=as.messages||[];
+        ['msg1','msg2','msg3'].forEach((id,i)=>{
+          const ta=p(acc,id); if(ta&&!ta.value&&msgs[i]) ta.value=msgs[i];
+        });
+        const cid=p(acc,'channelIdInput'); if(!cid.value&&as.channelId) cid.value=as.channelId;
+        const sl=p(acc,'delaySlider'); sl.value=as.intervalMs;
+        updateDelayLabel(acc,as.intervalMs);
+        // Current message indicator (acc1 only has msg index)
+        const cm=p(acc,'curMsg'); if(cm&&msgs.length>1) cm.textContent=((as.count%msgs.length)+1);
+        // Bypass status
+        const bs=p(acc,'bypassStatus'); if(bs) bs.textContent=as.bypass?'🛡️ Bypass ON':'';
       }
+      // Sync bypass toggle
+      const bt=p(acc,'bypassToggle');
+      if(bt) {
+        const bypassOn=active?as.bypass:state[acc].bypass;
+        bt.className='toggle'+(acc===2?' p':'')+(bypassOn?' on':'');
+      }
+    }
+
+    function toggleBypass(acc) {
+      state[acc].bypass = !state[acc].bypass;
+      const bt=p(acc,'bypassToggle');
+      bt.className='toggle'+(acc===2?' p':'')+(state[acc].bypass?' on':'');
     }
 
     async function toggleAutoReact(acc) {
@@ -356,8 +431,7 @@
       if(!emoji) return toast('Emoji cannot be empty','err');
       try {
         const res=await fetch(APIS[acc]+'/auto-react',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({enabled:state[acc].autoReact.enabled,emoji})});
-        const d=await res.json();
-        state[acc].autoReact=d.autoReact;
+        const d=await res.json(); state[acc].autoReact=d.autoReact;
         toast('✅ Emoji saved: '+emoji,'ok');
       } catch { toast('Failed to save emoji','err'); }
     }
@@ -366,8 +440,7 @@
       const v=!state[acc].clipboardMessenger.enabled;
       try {
         const res=await fetch(APIS[acc]+'/clipboard-messenger',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({enabled:v,channelId:state[acc].clipboardMessenger.channelId})});
-        const d=await res.json();
-        state[acc].clipboardMessenger=d.clipboardMessenger;
+        const d=await res.json(); state[acc].clipboardMessenger=d.clipboardMessenger;
         renderClipboard(acc);
         toast(v?'✅ Messenger on':'⛔ Messenger off',v?'ok':'');
       } catch { toast('Failed to toggle','err'); }
@@ -377,11 +450,10 @@
       const channelId=p(acc,'channelIdInput').value.trim();
       try {
         const res=await fetch(APIS[acc]+'/clipboard-messenger',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({enabled:state[acc].clipboardMessenger.enabled,channelId})});
-        const d=await res.json();
-        state[acc].clipboardMessenger=d.clipboardMessenger;
+        const d=await res.json(); state[acc].clipboardMessenger=d.clipboardMessenger;
         p(acc,'channelIdInput').dataset.edited='';
         toast('✅ Channel ID saved','ok');
-      } catch { toast('Failed to save Channel ID','err'); }
+      } catch { toast('Failed to save','err'); }
     }
 
     function updateDelayLabel(acc,val) {
@@ -392,14 +464,21 @@
       }
     }
 
+    function getMessages(acc) {
+      if(acc===1) {
+        return [p(1,'msg1').value.trim(), p(1,'msg2').value.trim(), p(1,'msg3').value.trim()].filter(m=>m.length>0);
+      }
+      return [p(2,'msg1').value.trim()].filter(m=>m.length>0);
+    }
+
     async function sendOnce(acc) {
-      const message=p(acc,'messageInput').value.trim();
+      const msgs=getMessages(acc);
       const channelId=p(acc,'channelIdInput').value.trim()||state[acc].clipboardMessenger.channelId;
-      if(!message) return toast('Message cannot be empty','err');
+      if(!msgs.length) return toast('Message cannot be empty','err');
       if(!channelId) return toast('Enter a Channel ID first','err');
       const btn=p(acc,'sendOnceBtn'); btn.disabled=true; btn.textContent='Sending…';
       try {
-        const res=await fetch(APIS[acc]+'/send-message',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message,channelId})});
+        const res=await fetch(APIS[acc]+'/send-message',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msgs[0],channelId})});
         const d=await res.json();
         toast(d.success?'✅ Sent!':'Error: '+(d.error||'Failed'),d.success?'ok':'err');
       } catch { toast('Failed to send','err'); }
@@ -407,16 +486,21 @@
     }
 
     async function startAutoSend(acc) {
-      const message=p(acc,'messageInput').value.trim();
+      const messages=getMessages(acc);
       const channelId=p(acc,'channelIdInput').value.trim()||state[acc].clipboardMessenger.channelId;
-      if(!message) return toast('Message cannot be empty','err');
+      if(!messages.length) return toast('Message 1 cannot be empty','err');
       if(!channelId) return toast('Enter a Channel ID first','err');
       const intervalMs=parseInt(p(acc,'delaySlider').value);
+      const bypass=state[acc].bypass;
       try {
-        const res=await fetch(APIS[acc]+'/auto-send/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message,channelId,intervalMs})});
+        const res=await fetch(APIS[acc]+'/auto-send/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages,channelId,intervalMs,bypass})});
         const d=await res.json();
-        if(d.success){state[acc].autoSend=d.autoSend;renderAutoSendUI(acc);toast('▶ Auto-send running','ok');}
-        else toast('Error: '+(d.error||'Failed'),'err');
+        if(d.success) {
+          state[acc].autoSend=d.autoSend;
+          renderAutoSendUI(acc);
+          const info=messages.length>1?` (${messages.length} msgs cycling)`:'';
+          toast('▶ Auto-send running'+info,'ok');
+        } else toast('Error: '+(d.error||'Failed'),'err');
       } catch { toast('Failed to start','err'); }
     }
 
@@ -444,7 +528,7 @@
     function openTokenModal(acc) {
       activeTokenAccount=acc;
       document.getElementById('tokenModalTitle').textContent='🔑 Account '+acc+' Token';
-      document.getElementById('tokenModalDesc').textContent='Paste the Discord user token for Account '+acc+'. The bot reconnects immediately.';
+      document.getElementById('tokenModalDesc').textContent='Paste your Discord token for Account '+acc+'. It will be saved and reused after restarts.';
       document.getElementById('tokenInput').value='';
       const btn=document.getElementById('changeTokenBtn'); btn.disabled=false; btn.textContent='Apply & Reconnect';
       document.getElementById('tokenModal').classList.add('open');
